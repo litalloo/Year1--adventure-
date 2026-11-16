@@ -111,7 +111,7 @@ h1{font-size:28px} h2{font-size:23px} h3{font-size:19px}
 .chip{background:#EEF5FF;border:3px solid #CBE0FF;border-radius:12px;padding:8px 12px;font-size:24px;font-weight:700}
 .chip.used{opacity:.25;pointer-events:none}
 .built{min-height:64px;border:3px dashed #CBE0FF;border-radius:16px;padding:10px;font-size:26px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:10px 0}
-.trace-wrap{position:relative;width:min(92vw,380px);aspect-ratio:1;margin:0 auto;border-radius:22px;overflow:hidden;border:3px solid #E3DAFB;background:#fff}
+.trace-wrap{position:relative;width:min(100%,380px);aspect-ratio:1;margin:0 auto;border-radius:22px;overflow:hidden;border:3px solid #E3DAFB;background:#fff}
 .trace-wrap canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
 .lines{position:absolute;inset:0;background:linear-gradient(#fff 0 0);pointer-events:none}
 .fam{color:var(--writing);font-weight:700;font-size:16px;margin-bottom:6px}
@@ -506,7 +506,7 @@ function planFor(w,d){const wi=wIndex(w),mk=w.m,mathL=MATHS_ACTS.find(a=>a[0]===
   {z:'sounds',e:'👽',l:'Alien Words',s:'Read made-up words',run:b=>actAlien(b,weekSounds(w))},
   {z:'sounds',e:'🎤',l:'Speak Up!',s:'Say sentences loud and clear',run:b=>actSpeak(b)}][d]);
  const fam=(wi+d)%FAMILIES.length,en=ENGL[w.en]||ENGL.sentence,story=(wi*2+d)%STORIES.length;
- t.push([{z:'writing',e:'✏️',l:'Handwriting: '+FAMILIES[fam][0],s:'Trace 3 letters',run:b=>actTrace(b,fam,0)},
+ t.push([{z:'writing',e:'✏️',l:'Handwriting: '+FAMILIES[fam][0],s:'Trace the letters, then the whole word',run:b=>actTrace(b,fam,0)},
   {z:'writing',e:'🧱',l:'Sentence Builder',s:'English: '+w.el,run:b=>actSentence(b)},
   {z:w.en==='story'||w.en==='readpic'?'reading':'writing',e:en[1],l:w.en==='story'?'Read & Match':en[0],s:'English: '+w.el,run:w.en==='story'?b=>actReadPic(b):en[2]},
   {z:'reading',e:STORIES[story].e,l:'Story: '+STORIES[story].t,s:'Read it, then answer questions',run:b=>actStory(b,story)}][d]);
@@ -627,26 +627,27 @@ function actSentence(back){const pool=shuffle(SENTENCES).slice(0,5);let i=0,got=
 
 /* letter tracing with coverage check */
 const FAMILIES=[['Curly caterpillar','c a d g o q e s f'],['Long ladder','l i t u j y'],['One-armed robot','r n m h k b p'],['Zig-zag monster','z v w x'],['Capital letters','A B C D E F G H I J K L M N O P Q R S T U V W X Y Z'],['Numbers','0 1 2 3 4 5 6 7 8 9']];
-function actTrace(back,fam=0,li=0){const [fname,chars]=FAMILIES[fam],list=chars.split(' '),ch=list[li%list.length];screen('✏️ Letter Tracing','var(--writing)',back);
- const sets=el('<div class="sets"></div>');FAMILIES.forEach((f,k)=>{const b=el(`<button class="${k===fam?'on':''}">${f[0]}</button>`);b.onclick=()=>actTrace(back,k,0);sets.append(b)});$app.append(sets);
- const st=el(`<div class="stage"><div class="fam">${fname} family · ${li%list.length+1} of ${list.length}</div><div class="trace-wrap"><canvas class="g"></canvas><canvas class="d"></canvas></div><p class="muted">Trace over the letter with your finger. Start at the top!</p><div><button class="small-btn" id="clr">🧽 Clear</button><button class="small-btn" id="hear">🔊 Hear it</button><button class="big-btn purple" id="chk">Done ✓</button><button class="small-btn" id="nx">Next →</button></div><div class="heard" id="msg"></div></div>`);$app.append(st);
+const TRACEWORDS=[['dog','egg','cod','gas','sea','face'],['lit','lily','tilt','jut'],['hen','ham','rub','pin','kit'],['zip','van','wax','web','fox'],['Luna','Mum','Dad','Sam','Meg','Zoe'],['123','456','789','10','246']];
+function actTrace(back,fam=0,step=0,word=null,got=0){const [fname]=FAMILIES[fam];word=word||pick(TRACEWORDS[fam]);const letters=word.split(''),isWord=step>=letters.length,ch=isWord?word:letters[step],isNum=/^[0-9]+$/.test(word);screen('✏️ Letter Tracing','var(--writing)',back);
+ const sets=el('<div class="sets"></div>');FAMILIES.forEach((f,k)=>{const b=el(`<button class="${k===fam?'on':''}">${f[0]}</button>`);b.onclick=()=>actTrace(back,k,0,null,0);sets.append(b)});$app.append(sets);
+ const st=el(`<div class="stage"><div class="fam">${fname} family · ${isWord?'Now trace the whole '+(isNum?'number':'word')+'!':'Letter '+(step+1)+' of '+letters.length+' · building “'+esc(word)+'”'}</div><div class="trace-wrap"><canvas class="g"></canvas><canvas class="d"></canvas></div><p class="muted">Trace over the letter with your finger. Start at the top!</p><div><button class="small-btn" id="clr">🧽 Clear</button><button class="small-btn" id="hear">🔊 Hear it</button><button class="big-btn purple" id="chk">Done ✓</button><button class="small-btn" id="nx">Next →</button></div><div class="heard" id="msg"></div></div>`);$app.append(st);
  const wrap=st.querySelector('.trace-wrap'),gc=st.querySelector('.g'),dc=st.querySelector('.d');let S;
  const setup=()=>{const r=wrap.getBoundingClientRect(),dpr=window.devicePixelRatio||1;S=r.width;[gc,dc].forEach(c=>{c.width=S*dpr;c.height=S*dpr;c.getContext('2d').setTransform(dpr,0,0,dpr,0,0)});const g=gc.getContext('2d');
   g.strokeStyle='#E8E0FA';g.lineWidth=2;[.25,.5,.75].forEach((y,k)=>{g.setLineDash(k===1?[6,6]:[]);g.beginPath();g.moveTo(10,S*y+S*.1);g.lineTo(S-10,S*y+S*.1);g.stroke()});g.setLineDash([]);
-  g.fillStyle='#D9D3E6';g.font=`700 ${S*.72}px Andika`;g.textAlign='center';g.textBaseline='alphabetic';g.fillText(ch,S/2,S*.85);
+  const fs=S*Math.min(.72,.9/(Math.max(1,ch.length)*.62));g.fillStyle='#D9D3E6';g.font=`700 ${fs}px Andika`;g.textAlign='center';g.textBaseline='alphabetic';g.fillText(ch,S/2,S*.85);
   mk.width=gc.width;mk.height=gc.height;const m=mk.getContext('2d');m.setTransform(dpr,0,0,dpr,0,0);m.fillStyle='#000';m.font=g.font;m.textAlign='center';m.fillText(ch,S/2,S*.85)};
  const mk=document.createElement('canvas');
  const fontReady=(document.fonts&&document.fonts.load)?document.fonts.load(`700 100px Andika`):Promise.resolve();fontReady.then(setup,setup);
  const dx=dc.getContext('2d');let drawing=false,last=null;const P=e=>{const r=dc.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
- dc.onpointerdown=e=>{drawing=true;last=P(e);dc.setPointerCapture(e.pointerId)};dc.onpointermove=e=>{if(!drawing)return;const p=P(e);dx.strokeStyle='#8E5CF7';dx.lineWidth=S*.075;dx.lineCap='round';dx.lineJoin='round';dx.beginPath();dx.moveTo(...last);dx.lineTo(...p);dx.stroke();last=p};dc.onpointerup=dc.onpointercancel=()=>{drawing=false};
+ dc.onpointerdown=e=>{drawing=true;last=P(e);dc.setPointerCapture(e.pointerId)};dc.onpointermove=e=>{if(!drawing)return;const p=P(e);dx.strokeStyle='#8E5CF7';dx.lineWidth=S*(isWord&&ch.length>1?.045:.075);dx.lineCap='round';dx.lineJoin='round';dx.beginPath();dx.moveTo(...last);dx.lineTo(...p);dx.stroke();last=p};dc.onpointerup=dc.onpointercancel=()=>{drawing=false};
  const msg=st.querySelector('#msg');st.querySelector('#clr').onclick=()=>{dx.clearRect(0,0,S,S);msg.textContent=''};
- st.querySelector('#hear').onclick=()=>speak(/[0-9]/.test(ch)?ch:(ch===ch.toUpperCase()?'capital '+ch:ch)+(/[a-z]/i.test(ch)?', as in '+({a:'apple',b:'bat',c:'cat',d:'dog',e:'egg',f:'fish',g:'goat',h:'hat',i:'ink',j:'jam',k:'kite',l:'leg',m:'mum',n:'net',o:'orange',p:'pig',q:'queen',r:'rat',s:'sun',t:'top',u:'up',v:'van',w:'web',x:'fox',y:'yes',z:'zip'})[ch.toLowerCase()]:''));
- st.querySelector('#nx').onclick=()=>actTrace(back,fam,li+1);
+ st.querySelector('#hear').onclick=()=>isWord?speak(word):speak(/[0-9]/.test(ch)?ch:(ch===ch.toUpperCase()?'capital '+ch:ch)+(/[a-z]/i.test(ch)?', as in '+({a:'apple',b:'bat',c:'cat',d:'dog',e:'egg',f:'fish',g:'goat',h:'hat',i:'ink',j:'jam',k:'kite',l:'leg',m:'mum',n:'net',o:'orange',p:'pig',q:'queen',r:'rat',s:'sun',t:'top',u:'up',v:'van',w:'web',x:'fox',y:'yes',z:'zip'})[ch.toLowerCase()]:''));
+ const advance=g2=>{if(isWord)finishScreen(g2,letters.length+1,'',()=>actTrace(back,fam,0,null,0),back);else actTrace(back,fam,step+1,word,g2)};st.querySelector('#nx').onclick=()=>advance(got);
  let starred=false;st.querySelector('#chk').onclick=()=>{try{const dpr=window.devicePixelRatio||1,W=gc.width;const gd=mk.getContext('2d').getImageData(0,0,W,W).data,dd=dx.getImageData(0,0,W,W).data;let gp=0,cov=0,drawn=0,out=0;const step=4*dpr|0||4;
    for(let y=0;y<W;y+=step)for(let x=0;x<W;x+=step){const i=(y*W+x)*4;const isG=gd[i+3]>100;const isD=dd[i+3]>40;if(isG){gp++;if(isD)cov++}if(isD){drawn++;if(!isG)out++}}
    const c=gp?cov/gp:0;if(drawn<5){msg.textContent='Trace the letter first!';return}
-   if(c>=.55&&out/drawn<.75){msg.textContent='⭐ Beautiful letter!';if(!starred){starred=true;addStar()}cheer();if(doneHook&&li>=2){finishScreen(3,3,'',()=>actTrace(back,fam,0),back);return}setTimeout(()=>actTrace(back,fam,li+1),1100)}
-   else if(c<.55){msg.textContent='Nearly! Try to cover more of the grey letter.';nearly('Nearly! Try to cover more of the letter.')}else{msg.textContent='Try to stay on the grey letter.';nearly('Try to stay on the letter.')}}catch(e){addStar();setTimeout(()=>actTrace(back,fam,li+1),800)}}}
+   if(c>=.55&&out/drawn<.75){msg.textContent='⭐ Beautiful letter!';if(!starred){starred=true;addStar(isWord?2:1)}cheer();setTimeout(()=>advance(got+(isWord?2:1)),1100)}
+   else if(c<.55){msg.textContent='Nearly! Try to cover more of the grey letter.';nearly('Nearly! Try to cover more of the letter.')}else{msg.textContent='Try to stay on the grey letter.';nearly('Try to stay on the letter.')}}catch(e){addStar();setTimeout(()=>advance(got+1),800)}}}
 const ACT={say:b=>actSay(b),blend:b=>actBlend(b),alien:actAlien,tricky:actTricky,speak:actSpeak,readpic:actReadPic,story:b=>actStory(b),wordbuild:actWordbuild,spell:b=>actSpell(b),sentence:actSentence,trace:b=>actTrace(b)};
 
 /* ============ STICKERS & GROWN-UPS ============ */
