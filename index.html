@@ -662,6 +662,17 @@ function grown(tab='plan'){screen('👪 Grown-ups','var(--ink)',home);const tabs
 document.getElementById('grownBtn').onclick=()=>grown();
 document.getElementById('starPill').onclick=stickers;
 home();
+
+/* ============ welcome for Luna ============ */
+const QUOTES=['You are braver than you believe, stronger than you seem, and smarter than you think.','Every day you learn something new. Keep going!','Mistakes help your brain grow. Have another go!','Be kind, be curious, be you!','You can do hard things.','Little steps every day make big adventures.','Shine bright like the star you are!','Believe in yourself — you’re amazing!'];
+function welcome(){const q=pick(QUOTES);
+ const m=el(`<div class="modal" id="welcome"><div class="card"><div style="font-size:70px;animation:pop .6s">🌟</div><h1>Hi Luna!</h1><p style="font-size:20px;line-height:1.5;margin:6px 0 14px">“${esc(q)}”</p><button class="say-btn" id="wsay">🔊 Hear it</button><div><button class="big-btn green" id="wgo">Let’s go! 🚀</button></div></div></div>`);
+ const close=()=>{try{speechSynthesis.cancel()}catch(e){}CTTS&&CTTS.stop&&CTTS.stop();m.remove()};
+ m.querySelector('#wgo').onclick=close;
+ m.onclick=e=>{if(e.target===m)close()};
+ m.querySelector('#wsay').onclick=()=>speak('Hi Luna! '+q,'happy');
+ document.body.append(m)}
+welcome();
 </script>
 </body>
 </html>
