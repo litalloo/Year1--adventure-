@@ -145,6 +145,15 @@ a{color:#1F5FD1}
 .modal .card{max-width:380px;text-align:center}
 .muted{color:var(--soft);font-size:15px}
 .coin text{font-family:Fredoka,sans-serif;font-weight:700}
+.vrow{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)}
+.vrow:last-child{border-bottom:none}
+.vg{font-size:30px;font-weight:700;min-width:58px;text-align:center;color:var(--sounds)}
+.vt{flex:1;font-size:15px;min-width:0}
+.vt small{display:block;color:var(--soft);font-size:13px}
+.vs{width:22px;text-align:center}
+.vrow .small-btn{margin:0;padding:8px 10px}
+.vrow .small-btn:disabled{opacity:.3}
+.vrow .vrec.listening{background:#FFE4E4;border-color:var(--bad)}
 </style>
 </head>
 <body>
@@ -158,6 +167,7 @@ a{color:#1F5FD1}
 </div>
 <div id="fx"></div>
 
+<script src="audio/manifest.js"></script>
 <script>
 /* ============ helpers ============ */
 const $app = document.getElementById('app');
@@ -182,9 +192,41 @@ try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
 /* moods give the voice some expression: happy = brighter and livelier, gentle = softer and slower */
 const MOODS={normal:{rate:.9,pitch:1.12,cr:.95},happy:{rate:1,pitch:1.3,cr:1.08},gentle:{rate:.84,pitch:1.05,cr:.88},slow:{rate:.72,pitch:1.1,cr:.8}};
 function webSay(t,mood){return new Promise(res=>{try{const m=MOODS[mood]||MOODS.normal;const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';if(gbVoice)u.voice=gbVoice;u.rate=m.rate;u.pitch=m.pitch;let done=false;const fin=()=>{if(!done){done=true;res()}};u.onend=fin;u.onerror=fin;setTimeout(fin,1200+t.length*110);speechSynthesis.speak(u)}catch(e){res()}})}
-function sayOne(t,mood){const m=MOODS[mood]||MOODS.normal;if(CTTS)return CTTS.speak(t,{rate:m.cr,language:'en',voice:'airy'}).catch(e=>e&&e.code==='viewer_stopped'?null:webSay(t,mood));return webSay(t,mood)}
+function ttsSay(t,mood){const m=MOODS[mood]||MOODS.normal;if(CTTS)return CTTS.speak(t,{rate:m.cr,language:'en',voice:'airy'}).catch(e=>e&&e.code==='viewer_stopped'?null:webSay(t,mood));return webSay(t,mood)}
+/* ---- audio clips: a grown-up's own recordings first, then the pre-recorded natural voice, then the device voice ---- */
+const AUDIO=window.Y1A_AUDIO||{};
+const AU=new Audio();AU.preload='auto';let auFin=null,auUnlocked=false;
+const SILENT='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';
+/* phones only allow sound after a tap: play a silent clip on the first taps to unlock the shared player */
+function unlockAudio(){if(auUnlocked||auFin)return;try{AU.src=SILENT;const p=AU.play();if(p)p.then(()=>{auUnlocked=true}).catch(()=>{});else auUnlocked=true}catch(e){}}
+['touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,unlockAudio,{capture:true}));
+function stopAudio(){try{AU.pause()}catch(e){}const f=auFin;auFin=null;if(f)f('stopped')}
+function playURL(url,rate=1){stopAudio();return new Promise(res=>{let done=false,t=null;const fin=r=>{if(done)return;done=true;if(auFin===fin)auFin=null;clearTimeout(t);res(r)};auFin=fin;
+ AU.onended=()=>fin('ok');AU.onerror=()=>fin('fail');
+ try{AU.src=url;AU.defaultPlaybackRate=rate;AU.playbackRate=rate;const p=AU.play();if(p)p.then(()=>{auUnlocked=true}).catch(e=>fin(e&&e.name==='AbortError'?'stopped':'fail'))}catch(e){fin('fail')}
+ t=setTimeout(()=>fin('ok'),90000)})}
+/* t is either text, or {ph:soundKey, fb:fallback text} for a phonics sound */
+async function sayOne(t,mood){
+ if(t&&typeof t==='object'){const u=REC.map[t.ph];if(u){const r=await playURL(u,1);if(r!=='fail')return}if(!t.fb)return;t=t.fb}
+ const f=AUDIO[t];if(f){const r=await playURL('audio/'+f+'.mp3',mood==='slow'?.85:1);if(r!=='fail')return}
+ return ttsSay(t,mood)}
+function stopAll(){seqTok++;stopAudio();try{speechSynthesis.cancel()}catch(e){}try{CTTS&&CTTS.stop&&CTTS.stop()}catch(e){}}
+
+/* ---- grown-up recordings of the phonics sounds (saved on this device in IndexedDB) ---- */
+const REC={map:{}};
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('y1a-voice',1);r.onupgradeneeded=()=>r.result.createObjectStore('clips');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function recPut(k,blob){const db=await idb();await new Promise((res,rej)=>{const tx=db.transaction('clips','readwrite');tx.objectStore('clips').put(blob,k);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});if(REC.map[k])URL.revokeObjectURL(REC.map[k]);REC.map[k]=URL.createObjectURL(blob)}
+async function recDel(k){const db=await idb();await new Promise((res,rej)=>{const tx=db.transaction('clips','readwrite');tx.objectStore('clips').delete(k);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});if(REC.map[k])URL.revokeObjectURL(REC.map[k]);delete REC.map[k]}
+const recReady=(async()=>{try{const db=await idb();await new Promise(res=>{const req=db.transaction('clips').objectStore('clips').openCursor();req.onsuccess=()=>{const c=req.result;if(c){REC.map[c.key]=URL.createObjectURL(c.value);c.continue()}else res()};req.onerror=()=>res()})}catch(e){}})();
+const hasRec=k=>!!REC.map[k];
+/* sound key for a grapheme id or single letter: spellings that make the same sound share one recording */
+const PH_OF={k:'c',ck:'c',zz:'z',wh:'w',ph:'f',kn:'n',wr:'r',mb:'m',dge:'j',ce:'s',tch:'ch',ti:'sh',ai:'ay','a-e':'ay',eigh:'ay',ea:'ee',ey:'ee','e-e':'ee',ie:'igh','i-e':'igh','y-igh':'igh',oe:'oa','o-e':'oa',aw:'or',au:'or',ore:'or',ir:'ur',ou:'ow',oy:'oi',are:'air','ear-air':'air',ew:'ue','u-e':'ue'};
+const phKey=id=>PH_OF[id]||id;
+// key, shown as, example word, other spellings, group (L = letter sounds, T = sound teams)
+const PHON=[['s','s','sun','ce as in mice','L'],['a','a','apple','','L'],['t','t','top','','L'],['p','p','pig','','L'],['i','i','ink','','L'],['n','n','net','kn as in knee','L'],['m','m','mum','mb as in lamb','L'],['d','d','dog','','L'],['g','g','goat','','L'],['o','o','orange','','L'],['c','c','cat','k, ck','L'],['e','e','egg','','L'],['u','u','up','','L'],['r','r','rat','wr as in write','L'],['h','h','hat','','L'],['b','b','bat','','L'],['f','f','fish','ph as in phone','L'],['l','l','leg','','L'],['j','j','jam','dge as in bridge','L'],['v','v','van','','L'],['w','w','web','wh as in whale','L'],['y','y','yes','','L'],['z','z','zip','zz as in buzz','L'],
+ ['sh','sh','ship','ti as in station','T'],['ch','ch','chip','tch as in witch','T'],['th','th','thumb','','T'],['ng','ng','ring','','T'],['qu','qu','queen','says “kw”','T'],['x','x','box','says “ks”','T'],['ay','ai','rain','ay, a‿e, eigh','T'],['ee','ee','bee','ea, ey, e‿e','T'],['igh','igh','night','ie, i‿e, y as in fly','T'],['oa','oa','boat','oe, o‿e','T'],['oo','oo','moon','long oo','T'],['oo2','oo','book','short oo','T'],['ar','ar','car','','T'],['or','or','fork','aw, au, ore','T'],['ur','ur','surf','ir','T'],['ow','ow','cow','ou','T'],['oi','oi','coin','oy','T'],['ear','ear','ear','','T'],['air','air','hair','are, ear as in bear','T'],['er','er','hammer','a lazy “uh”','T'],['ue','ue','blue','ew, u‿e — says “yoo”','T']];
 /* speak a list of parts with a real pause between them; a new call cancels the old one */
-function speakSeq(parts,gap=900){const tok=++seqTok;try{speechSynthesis.cancel()}catch(e){}if(CTTS&&CTTS.stop)try{CTTS.stop()}catch(e){}let i=0;const next=()=>{if(tok!==seqTok||i>=parts.length)return;const p=parts[i++];const [t,mood]=Array.isArray(p)?p:[p,'normal'];sayOne(t,mood).then(()=>{if(tok===seqTok)setTimeout(next,gap)})};next()}
+function speakSeq(parts,gap=900){const tok=++seqTok;stopAudio();try{speechSynthesis.cancel()}catch(e){}if(CTTS&&CTTS.stop)try{CTTS.stop()}catch(e){}let i=0;const next=()=>{if(tok!==seqTok||i>=parts.length)return;const p=parts[i++];const [t,mood]=Array.isArray(p)?p:[p,'normal'];sayOne(t,mood).then(()=>{if(tok===seqTok)setTimeout(next,gap)})};next()}
 function speak(t,mood='normal'){if(t)speakSeq([[t,mood]])}
 const cheer=()=>speak(pick(PRAISE),'happy');
 const nearly=(t)=>speak(t||pick(TRY_AGAIN),'gentle');
@@ -426,7 +468,7 @@ const MG={
   return{prompt:`${a} − ${b} = ?`,say:`What is ${a} take away ${b}?`,visual:lv<3?`<div class="dots">${dots(a-b)}${dots(b,'x')}</div>`:'',...numOpts(a-b,3)}},
  addsub20(){return Math.random()<.5?MG.add20():MG.sub20()},
  pv20(){return pvQ(11,20)},pv50(){return pvQ(11,50)},pv100(){return pvQ(21,99)},
- compare(){const mx=[10,20,50][L()-1];let a=rnd(0,mx),b=Math.random()<.2?a:rnd(0,mx);const ans=a<b?0:a>b?1:2;return{prompt:`${a}  ?  ${b}`,say:`Is ${a} less than, greater than, or equal to ${b}?`,visual:'',options:['&lt; less than','&gt; greater than','= equal to'],answer:ans,small:true}},
+ compare(){const mx=[10,20,50][L()-1];let a=rnd(0,mx),b=Math.random()<.2?a:rnd(0,mx);const ans=a<b?0:a>b?1:2;return{prompt:`${a}  ?  ${b}`,say:'Look at the two numbers. Which sign goes in the middle?',visual:'',options:['&lt; less than','&gt; greater than','= equal to'],answer:ans,small:true}},
  skip(){const lv=L(),st=pick(lv===1?[10]:lv===2?[2,10]:[2,5,10]),back=lv===3&&Math.random()<.3,start=st*rnd(0,lv===1?3:6);let seq=[0,1,2,3,4].map(i=>start+i*st);if(back)seq=seq.reverse();const mi=rnd(1,4),ans=seq[mi];const s=new Set([ans]);[ans+st,ans-st,ans+1,ans-1].forEach(v=>{if(v>=0&&s.size<3)s.add(v)});const a=shuffle([...s]);return{prompt:seq.map((v,i)=>i===mi?'__':v).join(', '),say:back?`Count back in ${st}s. What number is missing?`:`Count in ${st}s. What number is missing?`,visual:'',options:a.map(String),answer:a.indexOf(ans)}},
  more1(){const n=rnd(1,[20,50,99][L()-1]),more=Math.random()<.5,ans=more?n+1:n-1;const a=shuffle([ans,n,more?n-1:n+1]);return{prompt:`One ${more?'more':'less'} than ${n} is…`,say:`What is one ${more?'more':'less'} than ${n}?`,visual:'',options:a.map(String),answer:a.indexOf(ans)}},
  double(){const lv=L();if(lv===1||Math.random()<.5){const n=rnd(1,lv===1?5:10);return{prompt:`Double ${n} = ?`,say:`What is double ${n}?`,visual:lv<3?`<div class="dots">${dots(n)}</div><div style="height:6px"></div><div class="dots">${dots(n,'b')}</div>`:'',...numOpts(2*n,2)}}const n=rnd(1,lv===2?5:10);return{prompt:`Half of ${2*n} = ?`,say:`What is half of ${2*n}?`,visual:lv<3?`<div class="dots">${dots(2*n)}</div>`:'',...numOpts(n,2)}},
@@ -465,7 +507,7 @@ function worldGen(key){if(key==='animals'||key==='diet'){const L=key==='animals'
 const WORLD_ACTS=[['animals','Animal groups','🐾','Mammals, birds, fish…'],['diet','What do animals eat?','🥕','Herbivore, carnivore, omnivore'],['body','My body & senses','👀','Body parts'],['materials','Materials','🧱','Wood, metal, glass…'],['plants','Plants & trees','🌳','Parts of a plant'],['seasons','Seasons & weather','🍂','Spring to winter'],['daysmonths','Days & months','📅','Order and names'],['uk','The UK & the world','🗺️','Countries & capitals']];
 
 /* ============ UI shell ============ */
-function screen(title,color,backFn){$app.innerHTML='';const bar=el(`<div class="bar"><button class="back">← Back</button><h2 style="margin:0;flex:1;color:${color}">${title}</h2></div>`);bar.querySelector('.back').onclick=()=>{try{speechSynthesis.cancel()}catch(e){};CTTS&&CTTS.stop&&CTTS.stop();backFn()};$app.append(bar);window.scrollTo(0,0);return bar}
+function screen(title,color,backFn){$app.innerHTML='';const bar=el(`<div class="bar"><button class="back">← Back</button><h2 style="margin:0;flex:1;color:${color}">${title}</h2></div>`);bar.querySelector('.back').onclick=()=>{stopAll();backFn()};$app.append(bar);window.scrollTo(0,0);return bar}
 let doneHook=null; // set when launched from Today
 function finishScreen(got,total,color,again,back){$app.innerHTML='';const d=el(`<div class="stage done-screen"><div class="bigstar">🌟</div><h1>${pick(['Brilliant work!','You did it!','Super star!','Amazing!'])}</h1><p style="font-size:22px">You earned <b>${got}</b> ⭐</p><div><button class="big-btn green" id="ag">Play again</button><button class="big-btn blue" id="bk">Finish</button></div></div>`);$app.append(d);confetti();speak(`Hooray! Brilliant! You earned ${got} star${got===1?'':'s'}!`,'happy');
  if(doneHook){doneHook();doneHook=null}d.querySelector('#ag').onclick=again;d.querySelector('#bk').onclick=back}
@@ -564,15 +606,15 @@ function setPicker(cur,onPick){const sets=[['week','This week'],['p3','Phase 3']
 const resolveSet=k=>Array.isArray(k)?k:setIds(k==='week'?WEEKSET:k);
 function hlWord(word,g){if(g.includes('-')){const [v]=g.split('-');const i=word.indexOf(v);if(i<0||!word.endsWith('e'))return esc(word);return esc(word.slice(0,i))+'<mark>'+v+'</mark>'+esc(word.slice(i+1,-1))+'<mark>e</mark>'}const i=word.indexOf(g);if(i<0)return esc(word);return esc(word.slice(0,i))+'<mark>'+esc(g)+'</mark>'+esc(word.slice(i+g.length))}
 function showG(g){return g.includes('-')?g.replace('-','‿'):g}
-function soundSay(x){return x.say?[[x.say,'slow'],[x.say,'slow'],[x.word,'normal']]:[[x.word,'slow'],[x.word,'normal']]}
+function soundSay(x){const k=phKey(x.id),s={ph:k,fb:x.say};return (x.say||hasRec(k))?[[s,'slow'],[s,'slow'],[x.word,'normal']]:[[x.word,'slow'],[x.word,'normal']]}
 function actSay(back,setK='week'){let ids=resolveSet(setK);let pool=Array.isArray(setK)?ids.map(id=>GBY[id]).filter(Boolean):shuffle(G.filter(x=>ids.includes(x.id)));if(!pool.length)pool=shuffle(G);const n=Math.min(6,pool.length);let i=0,got=0;
  const bar=screen('🗣️ Say the Sounds','var(--sounds)',back);$app.append(setPicker(setK,k=>actSay(back,k)));const prog=el('<div class="prog" style="margin-bottom:12px"><i style="width:0"></i></div>');$app.append(prog);const st=el('<div class="stage"></div>');$app.append(st);
  function next(){if(i>=n)return finishScreen(got,n,'',()=>actSay(back,setK),back);const x=pool[i];prog.firstChild.style.width=(i/n*100)+'%';
-  st.innerHTML=`<div class="grapheme">${esc(showG(x.g))}</div><div class="word-line">${x.e} ${hlWord(x.word,x.g)}</div><button class="say-btn">🔊 Hear it</button><div class="tip"><b>Grown-up tip:</b> ${tipFor(x)}</div><p class="muted">Say the sound <b>${esc(showG(x.g))}</b>, then say the word <b>${esc(x.word)}</b>.</p>`;
+  st.innerHTML=`<div class="grapheme">${esc(showG(x.g))}</div><div class="word-line">${x.e} ${hlWord(x.word,x.g)}</div><button class="say-btn">🔊 Hear it</button><div class="tip"><b>Grown-up tip:</b> ${tipFor(x)}${hasRec(phKey(x.id))?'':'<br>🎙️ Record this sound in your own voice: 👪 Grown-ups → My voice.'}</div><p class="muted">Say the sound <b>${esc(showG(x.g))}</b>, then say the word <b>${esc(x.word)}</b>.</p>`;
   st.querySelector('.say-btn').onclick=()=>speakSeq(soundSay(x),1000);setTimeout(()=>speakSeq(soundSay(x),1000),250);
   st.append(micBlock(x.word,()=>{got++;addStar();cheer();i++;setTimeout(next,1000)}))}
  next()}
-function soundButtons(segs,onTap){const d=el('<div class="soundbtns"></div>');segs.forEach(s=>{const g=segG(s),x=GBY[s];const b=el(`<button class="sb"><span>${esc(showG(g))}</span><span class="mk">${g.replace('-','').length>1?'<i class="dash"></i>':'<i class="dot"></i>'}</span></button>`);b.onclick=()=>{d.querySelectorAll('.sb').forEach(z=>z.classList.remove('lit'));b.classList.add('lit');if(x&&x.say)speak(x.say,'slow');onTap&&onTap()};d.append(b)});return d}
+function soundButtons(segs,onTap){const d=el('<div class="soundbtns"></div>');segs.forEach(s=>{const g=segG(s),x=GBY[s];const b=el(`<button class="sb"><span>${esc(showG(g))}</span><span class="mk">${g.replace('-','').length>1?'<i class="dash"></i>':'<i class="dot"></i>'}</span></button>`);b.onclick=()=>{d.querySelectorAll('.sb').forEach(z=>z.classList.remove('lit'));b.classList.add('lit');const k=phKey(s);if(hasRec(k)||(x&&x.say))speak({ph:k,fb:x&&x.say},'slow');onTap&&onTap()};d.append(b)});return d}
 function actBlend(back,setK='week'){const ids=resolveSet(setK);let pool=wordsFor(ids,6,false);const n=Math.min(6,pool.length);let i=0,got=0;
  screen('🧩 Blend & Say','var(--sounds)',back);$app.append(setPicker(setK,k=>actBlend(back,k)));const prog=el('<div class="prog" style="margin-bottom:12px"><i style="width:0"></i></div>');$app.append(prog);const st=el('<div class="stage"></div>');$app.append(st);
  function next(){if(i>=n)return finishScreen(got,n,'',()=>actBlend(back,setK),back);const w=pool[i];prog.firstChild.style.width=(i/n*100)+'%';
@@ -630,6 +672,7 @@ function actSentence(back){const pool=shuffle(SENTENCES).slice(0,5);let i=0,got=
 
 /* letter tracing with coverage check */
 const FAMILIES=[['Curly caterpillar','c a d g o q e s f'],['Long ladder','l i t u j y'],['One-armed robot','r n m h k b p'],['Zig-zag monster','z v w x'],['Capital letters','A B C D E F G H I J K L M N O P Q R S T U V W X Y Z'],['Numbers','0 1 2 3 4 5 6 7 8 9']];
+function traceSay(ch){return /[0-9]/.test(ch)?ch:(ch===ch.toUpperCase()?'capital '+ch:ch)+(/[a-z]/i.test(ch)?', as in '+({a:'apple',b:'bat',c:'cat',d:'dog',e:'egg',f:'fish',g:'goat',h:'hat',i:'ink',j:'jam',k:'kite',l:'leg',m:'mum',n:'net',o:'orange',p:'pig',q:'queen',r:'rat',s:'sun',t:'top',u:'up',v:'van',w:'web',x:'fox',y:'yes',z:'zip'})[ch.toLowerCase()]:'')}
 const TRACEWORDS=[['dog','egg','cod','gas','sea','face'],['lit','lily','tilt','jut'],['hen','ham','rub','pin','kit'],['zip','van','wax','web','fox'],['Luna','Mum','Dad','Sam','Meg','Zoe'],['123','456','789','10','246']];
 function actTrace(back,fam=0,step=0,word=null,got=0){const [fname]=FAMILIES[fam];word=word||pick(TRACEWORDS[fam]);const letters=word.split(''),isWord=step>=letters.length,ch=isWord?word:letters[step],isNum=/^[0-9]+$/.test(word);screen('✏️ Letter Tracing','var(--writing)',back);
  const sets=el('<div class="sets"></div>');FAMILIES.forEach((f,k)=>{const b=el(`<button class="${k===fam?'on':''}">${f[0]}</button>`);b.onclick=()=>actTrace(back,k,0,null,0);sets.append(b)});$app.append(sets);
@@ -644,7 +687,7 @@ function actTrace(back,fam=0,step=0,word=null,got=0){const [fname]=FAMILIES[fam]
  const dx=dc.getContext('2d');let drawing=false,last=null;const P=e=>{const r=dc.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
  dc.onpointerdown=e=>{drawing=true;last=P(e);dc.setPointerCapture(e.pointerId)};dc.onpointermove=e=>{if(!drawing)return;const p=P(e);dx.strokeStyle='#8E5CF7';dx.lineWidth=S*(isWord&&ch.length>1?.045:.075);dx.lineCap='round';dx.lineJoin='round';dx.beginPath();dx.moveTo(...last);dx.lineTo(...p);dx.stroke();last=p};dc.onpointerup=dc.onpointercancel=()=>{drawing=false};
  const msg=st.querySelector('#msg');st.querySelector('#clr').onclick=()=>{dx.clearRect(0,0,S,S);msg.textContent=''};
- st.querySelector('#hear').onclick=()=>isWord?speak(word):speak(/[0-9]/.test(ch)?ch:(ch===ch.toUpperCase()?'capital '+ch:ch)+(/[a-z]/i.test(ch)?', as in '+({a:'apple',b:'bat',c:'cat',d:'dog',e:'egg',f:'fish',g:'goat',h:'hat',i:'ink',j:'jam',k:'kite',l:'leg',m:'mum',n:'net',o:'orange',p:'pig',q:'queen',r:'rat',s:'sun',t:'top',u:'up',v:'van',w:'web',x:'fox',y:'yes',z:'zip'})[ch.toLowerCase()]:''));
+ st.querySelector('#hear').onclick=()=>speak(isWord?word:traceSay(ch));
  const advance=g2=>{if(isWord)finishScreen(g2,letters.length+1,'',()=>actTrace(back,fam,0,null,0),back);else actTrace(back,fam,step+1,word,g2)};st.querySelector('#nx').onclick=()=>advance(got);
  let starred=false;st.querySelector('#chk').onclick=()=>{try{const dpr=window.devicePixelRatio||1,W=gc.width;const gd=mk.getContext('2d').getImageData(0,0,W,W).data,dd=dx.getImageData(0,0,W,W).data;let gp=0,cov=0,drawn=0,out=0;const step=4*dpr|0||4;
    for(let y=0;y<W;y+=step)for(let x=0;x<W;x+=step){const i=(y*W+x)*4;const isG=gd[i+3]>100;const isD=dd[i+3]>40;if(isG){gp++;if(isD)cov++}if(isD){drawn++;if(!isG)out++}}
@@ -655,14 +698,40 @@ const ACT={say:b=>actSay(b),blend:b=>actBlend(b),alien:actAlien,tricky:actTricky
 
 /* ============ STICKERS & GROWN-UPS ============ */
 function stickers(){screen('⭐ My Sticker Book','var(--star)',home);const got=Math.floor(stars/10);$app.append(el(`<div class="card"><p>You have <b>${stars}</b> stars. Every 10 stars unlocks a new sticker! ${got<STICKERS.length?`<br><span class="muted">${10-stars%10} more for the next one.</span>`:''}</p><div class="stickers">${STICKERS.map((s,i)=>`<div class="stk ${i<got?'':'locked'}">${s}</div>`).join('')}</div></div>`))}
-function grown(tab='plan'){screen('👪 Grown-ups','var(--ink)',home);const tabs=el('<div class="tabs"></div>');[['plan','Daily plan to July'],['how','How to use'],['sounds','Pure sounds'],['links','Free extras']].forEach(([k,l])=>{const b=el(`<button class="${k===tab?'on':''}">${l}</button>`);b.onclick=()=>grown(tab=k);tabs.append(b)});$app.append(tabs);const c=el('<div class="gu"></div>');$app.append(c);
+function grown(tab='plan'){screen('👪 Grown-ups','var(--ink)',home);const tabs=el('<div class="tabs"></div>');[['plan','Daily plan to July'],['voice','🎙️ My voice'],['how','How to use'],['sounds','Pure sounds'],['links','Free extras']].forEach(([k,l])=>{const b=el(`<button class="${k===tab?'on':''}">${l}</button>`);b.onclick=()=>grown(tab=k);tabs.append(b)});$app.append(tabs);const c=el('<div class="gu"></div>');$app.append(c);
  if(tab==='plan'){c.innerHTML=`<div class="hol psc"><b>Phonics Screening Check:</b> week beginning <b>Monday 14 June 2027</b> (England). Your child reads 40 words to their teacher — 20 real and 20 alien words.</div><p class="muted"><b>Monday–Thursday:</b> five short activities a day (about 15 minutes). Each day brings a new sound, a different English task and story, and maths that steps up a level (Level 1 on Monday to Level 3 on Thursday). <b>Friday:</b> a 10-question check on the whole week — scores and things to practise appear below. Maths levels also adjust automatically: 3 right first time moves up, 2 misses moves down. Holiday dates are typical for England — check your school’s own term dates.</p>`+
   WEEKOBJS.map(w=>{if(w.hol)return `<div class="hol">🏖️ ${esc(w.text)}</div>`;const s=parseISO(w.start),e=new Date(s);e.setDate(e.getDate()+4);const now=CW===w;const ck=store.get('check-'+w.start,null);
    return `<div class="wk ${now?'now':''}"><div class="d"><span>${fmt(s)} – ${fmt(e)}</span>${now?'<span>📍 This week</span>':''}</div><div class="row"><b>Phonics</b><span>${esc(w.ph)}</span><b>English</b><span>${esc(w.el)}</span><b>Maths</b><span>${esc(w.ml)}</span><b>My World</b><span>${esc(w.wl)}</span><b>Mon–Thu</b><span>${[0,1,2,3].map(d=>gList(daySounds(w,d))).join(' → ')}</span>${ck?`<b>Check</b><span>✅ ${ck.got}/${ck.n}${ck.misses.length?' · practise: '+ck.misses.map(esc).join(', '):''}</span>`:''}<b>Extra</b><span>${w.links.map(k=>`<a href="${LINK[k][1]}" target="_blank" rel="noopener">${esc(LINK[k][0])}</a>`).join(' · ')}</span></div></div>`}).join('')}
- if(tab==='how'){c.innerHTML=`<div class="card"><h3>Little and often</h3><p>Ten to fifteen minutes a day works better than one long session. Sit with your child — the speaking games work best with a grown-up listening.</p><h3>The speaking games</h3><p>On Chrome on a computer (or the Claude desktop app) the 🎤 button listens and checks the word. On phones and iPads, listen to your child yourself and tap <b>“I said it!”</b>. Speech checking is never perfect with young voices, so you can always tap <b>“Grown-up: that was right”</b>.</p><h3>Stars & stickers</h3><p>A star for each first-try answer; every 10 stars unlocks a sticker. Progress is saved on this device only.</p><h3>What’s covered</h3><ul><li><b>Phonics & speaking:</b> Phase 3 & 5 sounds, other ways to spell sounds, blending, tricky words, alien words, speaking full sentences.</li><li><b>Reading:</b> reading sentences for meaning, short stories with questions.</li><li><b>Writing:</b> letter formation by family, capitals & numbers, spelling by sounds, sentence order and punctuation, -s/-es/-ing/-ed/-er/-est, un-.</li><li><b>Maths:</b> counting, place value to 100, add & subtract within 20, number bonds, counting in 2s/5s/10s, doubling, groups & sharing, halves & quarters, shape, position & direction, time, money, length, mass & capacity.</li><li><b>My World:</b> animal groups and diets, body & senses, materials, plants, seasons, days & months, the UK and hot & cold places.</li></ul><button class="small-btn" id="reset">Reset stars & progress</button></div>`;
+ if(tab==='how'){c.innerHTML=`<div class="card"><h3>Little and often</h3><p>Ten to fifteen minutes a day works better than one long session. Sit with your child — the speaking games work best with a grown-up listening.</p><h3>The speaking games</h3><p>On Chrome on a computer (or the Claude desktop app) the 🎤 button listens and checks the word. On phones and iPads, listen to your child yourself and tap <b>“I said it!”</b>. Speech checking is never perfect with young voices, so you can always tap <b>“Grown-up: that was right”</b>.</p><h3>Voices</h3><p>Words, questions and stories are read by a natural recorded British voice. Phonics sounds use <b>your own recordings</b> — add them in 👪 Grown-ups → 🎙️ My voice. Anything without a recording falls back to the device’s voice; on iPhone you can download a nicer one in Settings → Accessibility → Spoken Content → Voices → English (UK).</p><h3>Stars & stickers</h3><p>A star for each first-try answer; every 10 stars unlocks a sticker. Progress is saved on this device only.</p><h3>What’s covered</h3><ul><li><b>Phonics & speaking:</b> Phase 3 & 5 sounds, other ways to spell sounds, blending, tricky words, alien words, speaking full sentences.</li><li><b>Reading:</b> reading sentences for meaning, short stories with questions.</li><li><b>Writing:</b> letter formation by family, capitals & numbers, spelling by sounds, sentence order and punctuation, -s/-es/-ing/-ed/-er/-est, un-.</li><li><b>Maths:</b> counting, place value to 100, add & subtract within 20, number bonds, counting in 2s/5s/10s, doubling, groups & sharing, halves & quarters, shape, position & direction, time, money, length, mass & capacity.</li><li><b>My World:</b> animal groups and diets, body & senses, materials, plants, seasons, days & months, the UK and hot & cold places.</li></ul><button class="small-btn" id="reset">Reset stars & progress</button></div>`;
   c.querySelector('#reset').onclick=()=>{const m=el('<div class="modal"><div class="card"><h3>Reset all stars?</h3><p class="muted">This clears stars, stickers and ticks on this device.</p><button class="big-btn grey" id="no">Cancel</button><button class="big-btn" id="yes">Reset</button></div></div>');m.querySelector('#no').onclick=()=>m.remove();m.querySelector('#yes').onclick=()=>{try{Object.keys(localStorage).filter(k=>k.startsWith('y1a-')).forEach(k=>localStorage.removeItem(k))}catch(e){}stars=0;updateStars();m.remove()};document.body.append(m)}}
  if(tab==='sounds'){c.innerHTML=`<div class="card"><h3>Say “pure” sounds</h3><p>Say <b>“mmm”</b> not “muh”, <b>“sss”</b> not “suh”, and keep short sounds like <b>t, p, k</b> clipped — no “uh” on the end. This makes blending much easier: “c-a-t” blends to “cat”, but “cuh-a-tuh” doesn’t.</p><h3>Sound buttons</h3><p>A <b>dot</b> under a letter means one letter makes the sound. A <b>dash</b> means two or three letters work together (sh, igh, air). A split sound like <b>a‿e</b> in “cake” is two letters apart that make one sound.</p><h3>Helping with speaking</h3><ul><li>Model it: say the word slowly, then ask your child to copy you.</li><li>Praise effort — never laugh at a mispronunciation.</li><li>Watch the mouth: lips round for “oo”, tongue out for “th”.</li><li>If a sound (like “th” or “r”) is still very hard by the summer, mention it to the class teacher.</li></ul></div>`}
+ if(tab==='voice')voicePage(c);
  if(tab==='links'){c.innerHTML=`<div class="card"><h3>Free extras</h3><p class="muted">These open in a new tab.</p><ul>${Object.values(LINK).map(([t,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join('')}</ul></div>`}}
+/* ---- recorder for the phonics sounds ---- */
+let recState=null;
+async function trimClip(blob){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return blob;const ac=new AC();
+ try{const buf=await ac.decodeAudioData(await blob.arrayBuffer());const d=buf.getChannelData(0),sr=buf.sampleRate;let peak=0;for(let i=0;i<d.length;i++){const v=Math.abs(d[i]);if(v>peak)peak=v}
+  if(peak<.01)return blob;const th=Math.max(.015,peak*.08);let a=0,b=d.length-1;while(a<b&&Math.abs(d[a])<th)a++;while(b>a&&Math.abs(d[b])<th)b--;
+  a=Math.max(0,a-Math.floor(sr*.06));b=Math.min(d.length-1,b+Math.floor(sr*.12));const n=b-a+1,g=.9/peak,fi=sr*.005,fo=sr*.015;
+  const ab=new ArrayBuffer(44+n*2),v=new DataView(ab),w=(o,str)=>{for(let i=0;i<str.length;i++)v.setUint8(o+i,str.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++){let x=d[a+i]*g*Math.min(1,i/fi,(n-1-i)/fo);x=Math.max(-1,Math.min(1,x));v.setInt16(44+i*2,x<0?x*0x8000:x*0x7FFF,true)}
+  return new Blob([ab],{type:'audio/wav'})}finally{try{ac.close()}catch(e){}}}
+async function recordSound(k,btn,onDone){if(recState){if(recState.stop)recState.stop();return}stopAll();
+ if(!navigator.mediaDevices||!window.MediaRecorder){alert('Recording isn’t supported in this browser. Try Safari on iPhone/iPad or Chrome on Android.');return}
+ recState={starting:true};btn.textContent='…';let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:true,autoGainControl:true}})}catch(e){recState=null;btn.textContent='🎤';alert('Please allow the microphone so you can record. (If the game isn’t opened from an https:// address, the browser won’t allow it.)');return}
+ const mime=['audio/webm;codecs=opus','audio/mp4','audio/webm','audio/ogg'].find(m=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m));
+ const mr=new MediaRecorder(stream,mime?{mimeType:mime}:undefined),chunks=[];let to=null;mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+ mr.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());clearTimeout(to);recState=null;btn.classList.remove('listening');btn.textContent='🎤';
+  const raw=new Blob(chunks,{type:mr.mimeType||mime||'audio/webm'});let blob=raw;try{blob=await trimClip(raw)}catch(e){}
+  try{await recPut(k,blob)}catch(e){alert('Couldn’t save the recording on this device.');return}onDone()};
+ recState={stop:()=>{if(mr.state!=='inactive')mr.stop()}};mr.start();btn.classList.add('listening');btn.textContent='■ Stop';to=setTimeout(()=>{if(mr.state!=='inactive')mr.stop()},5000)}
+function voicePage(c){
+ const row=p=>{const [k,g,ex,alt]=p,has=hasRec(k);return `<div class="vrow ${has?'has':''}" data-k="${k}"><span class="vg">${esc(g)}</span><span class="vt">as in <b>${esc(ex)}</b>${alt?`<small>${esc(alt)}</small>`:''}</span><span class="vs">${has?'✅':''}</span><button class="small-btn vrec">🎤</button><button class="small-btn vplay" ${has?'':'disabled'}>▶</button><button class="small-btn vdel" ${has?'':'disabled'}>🗑</button></div>`};
+ const draw=()=>{const n=PHON.filter(p=>hasRec(p[0])).length;c.innerHTML=`<div class="card"><h3>Record the phonics sounds in your voice</h3><p>Computer voices can’t say pure sounds properly, so the game plays <b>your</b> recording for every sound button and in “Say the Sounds”. Words, questions and stories use the recorded natural voice.</p><ul><li>Tap 🎤, say just the <b>pure sound</b> — “mmm” not “muh”, “sss” not “suh” — then tap ■ Stop (it stops by itself after 5 seconds).</li><li>Tap ▶ to check it. Re-record any time.</li><li>Quiet bits at the start and end are trimmed automatically.</li></ul><p class="muted">Saved on <b>this device only</b>, so record on the phone or tablet Luna uses. <b>${n} of ${PHON.length}</b> recorded.</p></div>
+  <div class="card"><h3>Letter sounds</h3>${PHON.filter(p=>p[4]==='L').map(row).join('')}</div><div class="card"><h3>Sound teams</h3>${PHON.filter(p=>p[4]==='T').map(row).join('')}</div>`;
+  c.querySelectorAll('.vrow').forEach(r=>{const k=r.dataset.k;r.querySelector('.vrec').onclick=e=>recordSound(k,e.currentTarget,draw);r.querySelector('.vplay').onclick=()=>speak({ph:k});r.querySelector('.vdel').onclick=async()=>{if(confirm('Delete this recording?')){await recDel(k).catch(()=>{});draw()}}})};
+ recReady.then(draw);draw()}
 document.getElementById('grownBtn').onclick=()=>grown();
 document.getElementById('starPill').onclick=stickers;
 home();
@@ -671,7 +740,7 @@ home();
 const QUOTES=['You are braver than you believe, stronger than you seem, and smarter than you think.','Every day you learn something new. Keep going!','Mistakes help your brain grow. Have another go!','Be kind, be curious, be you!','You can do hard things.','Little steps every day make big adventures.','Shine bright like the star you are!','Believe in yourself — you’re amazing!'];
 function welcome(){const q=pick(QUOTES);
  const m=el(`<div class="modal" id="welcome"><div class="card"><div style="font-size:70px;animation:pop .6s">🌟</div><h1>Hi Luna!</h1><p style="font-size:20px;line-height:1.5;margin:6px 0 14px">“${esc(q)}”</p><button class="say-btn" id="wsay">🔊 Hear it</button><div><button class="big-btn green" id="wgo">Let’s go! 🚀</button></div></div></div>`);
- const close=()=>{try{speechSynthesis.cancel()}catch(e){}CTTS&&CTTS.stop&&CTTS.stop();m.remove()};
+ const close=()=>{stopAll();m.remove()};
  m.querySelector('#wgo').onclick=close;
  m.onclick=e=>{if(e.target===m)close()};
  m.querySelector('#wsay').onclick=()=>speak('Hi Luna! '+q,'happy');
