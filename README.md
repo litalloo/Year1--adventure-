@@ -4,11 +4,11 @@ A phonics, reading, writing, maths and "My World" practice game for Year 1 (Engl
 
 ## Voices
 
-The game speaks in this order of preference:
+Reading voices can be previewed and selected in **Grown-ups → My voice**. The default prefers an installed natural British device voice, with the existing Jenny clips as fallback. You can explicitly select the device voice or original clips. Pitch stays close to the speaker's natural pitch, with gentle changes in pace for encouragement and slower reading. Available device voices vary by browser.
 
-1. **A grown-up's own recordings** of the phonics sounds (👪 Grown-ups → 🎙️ My voice). These are saved on that device only.
-2. **Pre-recorded natural voice clips** in `audio/`, listed in `audio/manifest.js`. Voice: **Jenny (Dioco)** ([dataset licence](https://github.com/dioco-group/jenny-tts-dataset)), made with [Piper](https://github.com/OHF-Voice/piper1-gpl).
-3. **The device's built-in voice**, for anything without a clip.
+Phonics uses **a grown-up's own pure-sound recordings**, saved on that device only. These always play at their original speed and pitch. If a sound is missing, the game asks a grown-up to model the sound in an example word; it never sends isolated letter spellings to ordinary text-to-speech. Record each sound and listen back before your child uses it. The long /oo/ in “blue” shares the moon sound; /yoo/ in “cube” and “stew” has a separate recording. The old ambiguous “ue” recording is no longer used; record the new cube row if needed.
+
+Existing reading clips use **Jenny (Dioco)** ([dataset licence](https://github.com/dioco-group/jenny-tts-dataset)), made with [Piper](https://github.com/OHF-Voice/piper1-gpl). This branch does not include new human-recorded phonics clips. It needs listening review on the child's device before merging.
 
 ### Re-making the voice clips
 
