@@ -7,7 +7,7 @@ A phonics, reading, writing, maths and "My World" practice game for Year 1 (Engl
 The game speaks in this order of preference:
 
 1. **A grown-up's own recordings** of the phonics sounds (👪 Grown-ups → 🎙️ My voice). These are saved on that device only.
-2. **Pre-recorded natural voice clips** in `audio/` (a British Piper voice), listed in `audio/manifest.js`.
+2. **Pre-recorded natural voice clips** in `audio/`, listed in `audio/manifest.js`. Voice: **Jenny (Dioco)** ([dataset licence](https://github.com/dioco-group/jenny-tts-dataset)), made with [Piper](https://github.com/OHF-Voice/piper1-gpl).
 3. **The device's built-in voice**, for anything without a clip.
 
 ### Re-making the voice clips
