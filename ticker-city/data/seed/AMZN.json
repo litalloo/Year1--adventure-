@@ -1,0 +1,48 @@
+{
+ "ticker": "AMZN",
+ "name": "Amazon",
+ "district": "consumer",
+ "sectorLabel": "Consumer",
+ "price": null,
+ "changePct": null,
+ "priceDate": "",
+ "verdict": "Buy",
+ "stats": {
+  "moat": "S",
+  "health": "A",
+  "growth": "A",
+  "profit": "A",
+  "mgmt": "A",
+  "value": "B"
+ },
+ "tagline": "Retail, AWS cloud and a fast-growing ad business: three companies in one.",
+ "strengths": [
+  "AWS is the cloud leader",
+  "Logistics network rivals can't match",
+  "High-margin advertising"
+ ],
+ "weaknesses": [
+  "Retail margins are thin",
+  "Heavy AI and data-center capex",
+  "Regulatory scrutiny"
+ ],
+ "thesis": [
+  "Higher-margin AWS and ads are a growing share of profit",
+  "Logistics scale keeps widening the gap"
+ ],
+ "moat": "Scale and cost advantage in logistics; switching costs in AWS.",
+ "outlook": "Profit mix keeps shifting toward AWS and ads. Watch AWS growth versus Azure and Google Cloud.",
+ "news": "Price not yet captured; fills in at the next daily update.",
+ "risks": [
+  "AWS loses share in AI",
+  "Capex without payoff",
+  "Antitrust"
+ ],
+ "changeMind": [
+  "AWS growth falling behind peers for several quarters"
+ ],
+ "entryNote": "",
+ "sources": [],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

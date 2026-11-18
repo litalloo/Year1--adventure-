@@ -1,0 +1,52 @@
+{
+ "ticker": "MU",
+ "name": "Micron Technology",
+ "district": "buzz",
+ "sectorLabel": "Buzz Boulevard",
+ "price": null,
+ "changePct": null,
+ "priceDate": "",
+ "verdict": "Hold",
+ "stats": {
+  "moat": "B",
+  "health": "A",
+  "growth": "A",
+  "profit": "A",
+  "mgmt": "B",
+  "value": "B"
+ },
+ "tagline": "Memory chipmaker riding AI demand for high-bandwidth memory.",
+ "strengths": [
+  "HBM demand from AI",
+  "Improved balance sheet",
+  "One of only three big DRAM makers"
+ ],
+ "weaknesses": [
+  "Highly cyclical",
+  "Capex heavy",
+  "Prices can swing fast"
+ ],
+ "thesis": [
+  "AI memory demand stretches the cycle"
+ ],
+ "moat": "Moderate: an oligopoly, but a commodity product.",
+ "outlook": "Memory stocks fell on the Nvidia shake-up. A cyclical name; buy when pessimism is high, not when it's trending.",
+ "news": "Price fills in at next update. Frequently mentioned on WSB.",
+ "risks": [
+  "Memory price downturn",
+  "AI demand pause"
+ ],
+ "changeMind": [
+  "Memory pricing turning down"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "AltIndex WSB mentions",
+   "url": "https://altindex.com/wallstreetbets"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation.",
+ "buzz": "In the top-7 WSB mentions across trackers."
+}

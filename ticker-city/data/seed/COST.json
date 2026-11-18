@@ -1,0 +1,46 @@
+{
+ "ticker": "COST",
+ "name": "Costco",
+ "district": "consumer",
+ "sectorLabel": "Consumer",
+ "price": 1111.17,
+ "changePct": -0.33,
+ "priceDate": "2026-11-17",
+ "verdict": "Watchlist",
+ "stats": {
+  "moat": "S",
+  "health": "S",
+  "growth": "B",
+  "profit": "B",
+  "mgmt": "S",
+  "value": "E"
+ },
+ "tagline": "The best-run retailer in America, at a price that leaves no room for error.",
+ "strengths": [
+  "Membership model with very high renewal rates",
+  "Lowest prices build fierce loyalty",
+  "Excellent management"
+ ],
+ "weaknesses": [
+  "Very high valuation",
+  "Thin margins by design",
+  "Slower growth than its multiple implies"
+ ],
+ "thesis": [
+  "Consumer surplus: members get more value than they pay"
+ ],
+ "moat": "Cost advantage and scale, locked in by membership fees. Very durable.",
+ "outlook": "A great business that's almost always priced as one. Keep it on the list for a sell-off.",
+ "news": "Roughly flat on Nov 17.",
+ "risks": [
+  "Multiple compression",
+  "Slowing same-store sales"
+ ],
+ "changeMind": [
+  "A broad market sell-off that brings the multiple down meaningfully"
+ ],
+ "entryNote": "Becomes interesting only after a large drop in the multiple.",
+ "sources": [],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

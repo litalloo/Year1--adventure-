@@ -1,0 +1,53 @@
+{
+ "ticker": "NBIS",
+ "name": "Nebius Group",
+ "district": "buzz",
+ "sectorLabel": "Buzz Boulevard",
+ "price": 105.76,
+ "changePct": -0.26,
+ "priceDate": "2026-11-17",
+ "verdict": "Pass",
+ "stats": {
+  "moat": "D",
+  "health": "B",
+  "growth": "S",
+  "profit": "E",
+  "mgmt": "B",
+  "value": "D"
+ },
+ "tagline": "Another AI neocloud, with a better balance sheet than most.",
+ "strengths": [
+  "Rapid growth",
+  "Raised capital rather than piling on debt",
+  "Experienced engineering team"
+ ],
+ "weaknesses": [
+  "Losses",
+  "Dilution from share issuance",
+  "Commodity GPU rental business"
+ ],
+ "thesis": [
+  "High-growth AI infrastructure, but unproven profitability"
+ ],
+ "moat": "Weak; competes on price and availability.",
+ "outlook": "Popular on Reddit. The business needs to show it can earn money before it fits this list.",
+ "news": "Trending on r/wallstreetbets trackers (ApeWisdom, Sirius).",
+ "risks": [
+  "Dilution",
+  "AI demand cycle",
+  "Competition from hyperscalers"
+ ],
+ "changeMind": [
+  "Profitable unit economics at scale"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "ApeWisdom WSB tracker",
+   "url": "https://apewisdom.io/wallstreetbets/"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation.",
+ "buzz": "Top-7 on WSB mention trackers this week."
+}

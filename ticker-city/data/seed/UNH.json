@@ -1,0 +1,56 @@
+{
+ "ticker": "UNH",
+ "name": "UnitedHealth",
+ "district": "health",
+ "sectorLabel": "Healthcare",
+ "price": 389.68,
+ "changePct": -5.42,
+ "priceDate": "2026-11-17",
+ "verdict": "Hold",
+ "stats": {
+  "moat": "A",
+  "health": "B",
+  "growth": "C",
+  "profit": "C",
+  "mgmt": "C",
+  "value": "B"
+ },
+ "tagline": "Biggest US health insurer, under regulatory fire.",
+ "strengths": [
+  "Scale in insurance plus Optum services",
+  "Huge data advantage",
+  "Historically strong cash flow"
+ ],
+ "weaknesses": [
+  "Scrutiny of its conglomerate structure and Medicare billing",
+  "Rising medical costs squeezed margins",
+  "Management credibility rebuilt only recently"
+ ],
+ "thesis": [
+  "Cheap versus its own history if earnings recover"
+ ],
+ "moat": "Scale and vertical integration. Durable, but regulators may limit it.",
+ "outlook": "Fell 5.4% on Nov 17 on scrutiny of its structure and Medicare oversight. Wait for clarity on regulation before adding.",
+ "news": "Dropped sharply on Nov 17 amid regulatory pressure.",
+ "risks": [
+  "Forced break-up of Optum",
+  "Medicare Advantage rate cuts",
+  "Medical cost trends"
+ ],
+ "changeMind": [
+  "Regulatory clarity plus margin recovery would make it a Buy"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "Traders Union: UnitedHealth drops amid regulatory pressure",
+   "url": "https://tradersunion.com/news/stocks/show/4304840-unitedhealth-drops-4-3percent-amid-regulatory"
+  },
+  {
+   "title": "Google Finance UNH",
+   "url": "https://www.google.com/finance/beta/quote/UNH:NYSE"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

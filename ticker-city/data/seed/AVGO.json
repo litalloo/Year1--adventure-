@@ -1,0 +1,53 @@
+{
+ "ticker": "AVGO",
+ "name": "Broadcom",
+ "district": "tech",
+ "sectorLabel": "Technology",
+ "price": 341.6,
+ "changePct": 2.46,
+ "priceDate": "2026-11-17",
+ "verdict": "Watchlist",
+ "stats": {
+  "moat": "A",
+  "health": "C",
+  "growth": "A",
+  "profit": "A",
+  "mgmt": "A",
+  "value": "C"
+ },
+ "tagline": "Custom AI chips plus VMware software, with acquisition debt attached.",
+ "strengths": [
+  "Custom AI accelerators for hyperscalers",
+  "Networking chips are critical for AI clusters",
+  "Very high margins"
+ ],
+ "weaknesses": [
+  "Debt load from the VMware deal",
+  "Few, very large customers",
+  "VMware price hikes upset some clients"
+ ],
+ "thesis": [
+  "Wins as hyperscalers design their own AI chips",
+  "Disciplined acquirer with a record of paying down debt"
+ ],
+ "moat": "Scale and deep customer integration in custom silicon; switching costs in VMware.",
+ "outlook": "Strong AI tailwind, but the price already assumes a lot of it. Judge it on debt paydown pace and AI revenue each quarter.",
+ "news": "Up 2.5% on Nov 17 against a falling market.",
+ "risks": [
+  "Customer concentration",
+  "Debt refinancing at higher rates",
+  "AI custom-chip orders are lumpy"
+ ],
+ "changeMind": [
+  "Faster debt paydown plus a lower multiple would make it a Buy"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "Morningstar AVGO quote",
+   "url": "https://www.morningstar.com/stocks/xnas/avgo/quote"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

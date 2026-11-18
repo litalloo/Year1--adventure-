@@ -1,0 +1,51 @@
+{
+ "ticker": "JNJ",
+ "name": "Johnson & Johnson",
+ "district": "health",
+ "sectorLabel": "Healthcare",
+ "price": 278.7,
+ "changePct": null,
+ "priceDate": "2026-11-17",
+ "verdict": "Hold",
+ "stats": {
+  "moat": "A",
+  "health": "S",
+  "growth": "C",
+  "profit": "A",
+  "mgmt": "A",
+  "value": "C"
+ },
+ "tagline": "Steady pharma and medtech giant near its all-time high.",
+ "strengths": [
+  "AAA-rated balance sheet",
+  "Diversified pharma and medtech",
+  "Long dividend record"
+ ],
+ "weaknesses": [
+  "Talc litigation overhang",
+  "Biosimilar pressure on key drugs",
+  "Slow growth"
+ ],
+ "thesis": [
+  "Defensive compounder"
+ ],
+ "moat": "Scale, regulatory know-how and patents. Durable.",
+ "outlook": "Set a record close of $285.75 on Nov 13. Fairly priced; a holder's stock, not a buy here.",
+ "news": "Slightly lower after a record mid-November.",
+ "risks": [
+  "Litigation",
+  "Drug patent cliffs"
+ ],
+ "changeMind": [
+  "A pullback toward a lower multiple"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "StockAnalysis JNJ price history",
+   "url": "https://stockanalysis.com/stocks/jnj/history/"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

@@ -1,0 +1,46 @@
+{
+ "ticker": "V",
+ "name": "Visa",
+ "district": "fin",
+ "sectorLabel": "Financials",
+ "price": 416.67,
+ "changePct": 0.0,
+ "priceDate": "2026-11-17",
+ "verdict": "Buy",
+ "stats": {
+  "moat": "S",
+  "health": "A",
+  "growth": "B",
+  "profit": "S",
+  "mgmt": "A",
+  "value": "B"
+ },
+ "tagline": "The toll road of global card payments.",
+ "strengths": [
+  "Two-sided network effect",
+  "Very high margins",
+  "Little credit risk"
+ ],
+ "weaknesses": [
+  "Regulatory pressure on swipe fees",
+  "Real-time payment alternatives",
+  "Litigation"
+ ],
+ "thesis": [
+  "Growth tied to consumer spending and cash-to-card shift"
+ ],
+ "moat": "Network effects between merchants and cardholders. Very durable.",
+ "outlook": "Steady compounder at a reasonable price.",
+ "news": "Roughly flat on Nov 17.",
+ "risks": [
+  "Interchange regulation",
+  "Stablecoin or account-to-account payments"
+ ],
+ "changeMind": [
+  "Regulation that caps fees in the US"
+ ],
+ "entryNote": "",
+ "sources": [],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

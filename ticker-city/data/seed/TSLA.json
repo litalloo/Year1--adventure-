@@ -1,0 +1,57 @@
+{
+ "ticker": "TSLA",
+ "name": "Tesla",
+ "district": "consumer",
+ "sectorLabel": "Consumer",
+ "price": 387.11,
+ "changePct": -0.8,
+ "priceDate": "2026-11-17",
+ "verdict": "Pass",
+ "stats": {
+  "moat": "B",
+  "health": "A",
+  "growth": "C",
+  "profit": "C",
+  "mgmt": "C",
+  "value": "E"
+ },
+ "tagline": "Priced for robotaxis and robots; the car business doesn't support it.",
+ "strengths": [
+  "Strong brand and EV scale",
+  "Energy storage growing",
+  "Net cash balance sheet"
+ ],
+ "weaknesses": [
+  "Car sales and margins under pressure",
+  "Valuation depends on unproven autonomy",
+  "Key-person and governance risk"
+ ],
+ "thesis": [
+  "Bull case rests on autonomy and robotics that aren't yet earning"
+ ],
+ "moat": "Some scale and brand advantage in EVs, but competitors, especially Chinese makers, have narrowed it.",
+ "outlook": "Worst-performing big tech stock of 2026 so far. Still trades far above any car-company multiple.",
+ "news": "Strongest five-day run since Sept 2025, per Benzinga. A top-5 social media name.",
+ "risks": [
+  "EV price war",
+  "Robotaxi delays",
+  "Key-person risk"
+ ],
+ "changeMind": [
+  "Proof of profitable, scaled autonomy"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "Motley Fool: Should you buy the worst-performing Mag 7 stock of 2026?",
+   "url": "https://www.fool.com/investing/2026/11/18/should-you-buy-the-worst-performing-magnificent-seven-stock-of-2026-before-2027/"
+  },
+  {
+   "title": "Benzinga Bulls and Bears",
+   "url": "https://www.benzinga.com/markets/market-summary/26/11/63273716/benzinga-bulls-and-bears-nvidia-rocket-lab-nebius"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation.",
+ "buzz": "Top-5 on X and WSB two weeks running."
+}

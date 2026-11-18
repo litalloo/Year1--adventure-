@@ -1,0 +1,52 @@
+{
+ "ticker": "LLY",
+ "name": "Eli Lilly",
+ "district": "health",
+ "sectorLabel": "Healthcare",
+ "price": 1395.27,
+ "changePct": -1.43,
+ "priceDate": "2026-11-17",
+ "verdict": "Watchlist",
+ "stats": {
+  "moat": "A",
+  "health": "B",
+  "growth": "S",
+  "profit": "A",
+  "mgmt": "A",
+  "value": "D"
+ },
+ "tagline": "Leader in GLP-1 obesity and diabetes drugs.",
+ "strengths": [
+  "Fastest growth in large-cap pharma",
+  "Strong pipeline beyond GLP-1s",
+  "Manufacturing scale-up ahead of rivals"
+ ],
+ "weaknesses": [
+  "Very high valuation",
+  "Drug-pricing pressure",
+  "Concentrated in one drug class"
+ ],
+ "thesis": [
+  "Obesity market is enormous and early"
+ ],
+ "moat": "Patents plus manufacturing scale. Durable until patents expire; competition is rising.",
+ "outlook": "Growth is exceptional, but the price assumes it continues for years. Wait for a better entry.",
+ "news": "Down 1.4% on Nov 18 snapshot; touched $1,415 on Nov 17.",
+ "risks": [
+  "Pricing pressure from governments",
+  "Rival obesity drugs",
+  "Pipeline setback"
+ ],
+ "changeMind": [
+  "A sell-off on news that doesn't damage the obesity franchise"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "MarketBeat: Best healthcare stocks to watch, Nov 17",
+   "url": "https://www.marketbeat.com/instant-alerts/list-best-healthcare-stocks-worth-watching-november-17th-2026-11-17/"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

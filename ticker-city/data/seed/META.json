@@ -1,0 +1,53 @@
+{
+ "ticker": "META",
+ "name": "Meta Platforms",
+ "district": "comm",
+ "sectorLabel": "Communication",
+ "price": 618.87,
+ "changePct": -1.2,
+ "priceDate": "2026-11-17",
+ "verdict": "Buy",
+ "stats": {
+  "moat": "A",
+  "health": "A",
+  "growth": "A",
+  "profit": "S",
+  "mgmt": "B",
+  "value": "B"
+ },
+ "tagline": "Three billion users and an ad machine, spending heavily on AI.",
+ "strengths": [
+  "Network effects across Facebook, Instagram, WhatsApp",
+  "Industry-leading ad targeting",
+  "Very profitable core"
+ ],
+ "weaknesses": [
+  "Huge AI and Reality Labs spending",
+  "Regulatory and youth-safety lawsuits",
+  "Founder-controlled voting"
+ ],
+ "thesis": [
+  "AI is already lifting ad performance",
+  "Valuation is reasonable for its growth"
+ ],
+ "moat": "Network effects and data scale. Durable, though attention can shift to new apps.",
+ "outlook": "Core ads are healthy. The question is whether the AI spend earns a return; watch capex against revenue growth.",
+ "news": "Closed down 1.2% on Nov 17.",
+ "risks": [
+  "Capex without payoff",
+  "Youth-safety litigation",
+  "Ad market slowdown"
+ ],
+ "changeMind": [
+  "Capex rising while revenue growth slows would drop it to Hold"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "Investing.com META historical data",
+   "url": "https://www.investing.com/equities/facebook-inc-historical-data"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

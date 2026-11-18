@@ -1,0 +1,52 @@
+{
+ "ticker": "ASML",
+ "name": "ASML Holding",
+ "district": "tech",
+ "sectorLabel": "Technology",
+ "price": 1383.11,
+ "changePct": -1.68,
+ "priceDate": "2026-11-17",
+ "verdict": "Watchlist",
+ "stats": {
+  "moat": "S",
+  "health": "A",
+  "growth": "B",
+  "profit": "S",
+  "mgmt": "A",
+  "value": "C"
+ },
+ "tagline": "The only maker of EUV lithography machines.",
+ "strengths": [
+  "True monopoly in EUV tools",
+  "Large order backlog",
+  "High returns on capital"
+ ],
+ "weaknesses": [
+  "China export restrictions",
+  "Lumpy orders tied to chipmaker capex",
+  "Premium valuation"
+ ],
+ "thesis": [
+  "Every leading-edge chip needs its machines"
+ ],
+ "moat": "Technology monopoly; decades of R&D and a unique supply chain. Extremely durable.",
+ "outlook": "A wonderful business that rarely gets cheap. Watch for chip-capex worries to offer a better entry.",
+ "news": "Down 1.7% on Nov 17 with chip stocks.",
+ "risks": [
+  "Chipmaker capex cuts",
+  "Export controls",
+  "Customer concentration (TSMC, Samsung, Intel)"
+ ],
+ "changeMind": [
+  "A broad chip sell-off that pushes the multiple toward its historical low would make it a Buy"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "Morningstar ASML quote",
+   "url": "https://www.morningstar.com/stocks/xnas/asml/quote"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

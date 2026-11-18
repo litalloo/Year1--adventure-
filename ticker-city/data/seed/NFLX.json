@@ -1,0 +1,56 @@
+{
+ "ticker": "NFLX",
+ "name": "Netflix",
+ "district": "comm",
+ "sectorLabel": "Communication",
+ "price": 59.68,
+ "changePct": null,
+ "priceDate": "2026-11-17",
+ "verdict": "Watchlist",
+ "stats": {
+  "moat": "A",
+  "health": "B",
+  "growth": "B",
+  "profit": "A",
+  "mgmt": "A",
+  "value": "B"
+ },
+ "tagline": "Streaming leader that just hit a 52-week low.",
+ "strengths": [
+  "Largest global streaming platform",
+  "Growing ad tier",
+  "Strong operating leverage"
+ ],
+ "weaknesses": [
+  "Share price trend is weak",
+  "Competition for viewing time from YouTube and short video",
+  "Content spending pressure"
+ ],
+ "thesis": [
+  "Scale lets it outspend rivals per subscriber"
+ ],
+ "moat": "Scale: content costs spread over the biggest subscriber base. Moderate durability.",
+ "outlook": "The stock closed below $60 on Nov 17 for the first time since August 2024 (post 10-for-1 split). Find out what's driving the decline before buying.",
+ "news": "Hit a 52-week low; closed at $59.68 on Nov 17.",
+ "risks": [
+  "Subscriber growth stalls",
+  "Ad tier slower than hoped",
+  "Rising content costs"
+ ],
+ "changeMind": [
+  "Clear evidence the business is fine and the drop is sentiment would make it a Buy"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "Motley Fool: Netflix closes below $60 for the first time since Aug 2024",
+   "url": "https://www.fool.com/investing/2026/11/18/netflix-stock-just-closed-below-usd60-for-the-first-time-since-august-2024-i-d-buy-it-now/"
+  },
+  {
+   "title": "24/7 Wall St.: Netflix hits a 52-week low",
+   "url": "https://247wallst.com/investing/2026/11/18/netflix-just-hit-a-52-week-low-wheres-the-bottom/"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

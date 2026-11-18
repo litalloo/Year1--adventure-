@@ -1,0 +1,65 @@
+{
+ "ticker": "NVDA",
+ "name": "NVIDIA",
+ "district": "tech",
+ "sectorLabel": "Technology",
+ "price": 155.39,
+ "changePct": -0.45,
+ "priceDate": "2026-11-17",
+ "verdict": "Buy",
+ "stats": {
+  "moat": "S",
+  "health": "S",
+  "growth": "S",
+  "profit": "S",
+  "mgmt": "C",
+  "value": "A"
+ },
+ "tagline": "The AI chip champion, knocked down by a sudden CEO exit.",
+ "strengths": [
+  "Dominant share of AI accelerators",
+  "CUDA software lock-in",
+  "Huge margins and cash generation"
+ ],
+ "weaknesses": [
+  "CEO Jensen Huang resigned in November; succession unclear",
+  "Customers concentrated in a few hyperscalers",
+  "China market largely lost"
+ ],
+ "thesis": [
+  "Quarterly revenue of about $115.8B beat estimates on Nov 17",
+  "Shares are roughly 30% below their October level, so the price now reflects more fear",
+  "The franchise (chips + software + networking) does not depend on one person"
+ ],
+ "moat": "Switching costs and ecosystem: CUDA, libraries and developer habits make rivals hard to swap in. Durable for years, though AMD and custom chips chip away at the edges.",
+ "outlook": "Demand still looks strong based on the latest quarter. The big unknown is leadership: who runs the company and whether strategy or culture changes. Expect volatility until a permanent CEO is named.",
+ "news": "Reported a quarter that topped estimates after the close on Nov 17 and rose after hours, following weeks of selling after Huang's resignation.",
+ "risks": [
+  "Leadership transition goes badly",
+  "Hyperscalers cut AI capex",
+  "Custom chips (TPU, Trainium) take share",
+  "Export controls widen"
+ ],
+ "changeMind": [
+  "A credible permanent CEO named quickly would firm up the call",
+  "Guidance cut or falling data-center orders would drop it to Hold"
+ ],
+ "entryNote": "Building in stages makes sense while leadership is unsettled.",
+ "sources": [
+  {
+   "title": "Motley Fool: Stock market today, Nov 17 2026",
+   "url": "https://www.fool.com/coverage/stock-market-today/2026/11/17/stock-market-today-nov-17-nvidia-slides-ahead-of-earnings-but-soars-in-after-hours-trading/"
+  },
+  {
+   "title": "SF Standard: Nvidia shares tumble as Wall Street reacts to Huang's exit",
+   "url": "https://sfstandard.com/2026/11/12/nvidia-shares-tumble-as-wall-street-reacts-huang-s-exit/"
+  },
+  {
+   "title": "Morningstar: Nvidia has been the market's golden goose. Now it's in crisis",
+   "url": "https://www.morningstar.com/stocks/nvidia-has-been-markets-golden-goose-now-its-crisis"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation.",
+ "buzz": "Most-mentioned ticker on r/wallstreetbets this week."
+}

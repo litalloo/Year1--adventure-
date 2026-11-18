@@ -1,0 +1,48 @@
+{
+ "ticker": "ISRG",
+ "name": "Intuitive Surgical",
+ "district": "health",
+ "sectorLabel": "Healthcare",
+ "price": 430.53,
+ "changePct": -1.65,
+ "priceDate": "2026-11-17",
+ "verdict": "Buy",
+ "stats": {
+  "moat": "S",
+  "health": "S",
+  "growth": "A",
+  "profit": "A",
+  "mgmt": "A",
+  "value": "C"
+ },
+ "tagline": "Robotic surgery leader with razor-and-blade economics.",
+ "strengths": [
+  "Installed base of da Vinci systems",
+  "Recurring revenue from instruments and service",
+  "No debt"
+ ],
+ "weaknesses": [
+  "Premium valuation",
+  "Competition from Medtronic and J&J robots",
+  "Hospital budget sensitivity"
+ ],
+ "thesis": [
+  "Every procedure drives recurring revenue",
+  "Shares well below their 52-week high (~$604)"
+ ],
+ "moat": "Switching costs: surgeons train on da Vinci and hospitals build programs around it. Very durable.",
+ "outlook": "A high-quality compounder that has pulled back meaningfully. Still not cheap on earnings, so build gradually.",
+ "news": "Down 1.65% on Nov 17.",
+ "risks": [
+  "Competitive robots",
+  "Procedure growth slows",
+  "Tariffs on components"
+ ],
+ "changeMind": [
+  "Procedure growth slowing sharply"
+ ],
+ "entryNote": "",
+ "sources": [],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation."
+}

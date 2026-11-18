@@ -1,0 +1,57 @@
+{
+ "ticker": "RKLB",
+ "name": "Rocket Lab",
+ "district": "buzz",
+ "sectorLabel": "Buzz Boulevard",
+ "price": 56.11,
+ "changePct": null,
+ "priceDate": "2026-11-17",
+ "verdict": "Watchlist",
+ "stats": {
+  "moat": "B",
+  "health": "B",
+  "growth": "A",
+  "profit": "E",
+  "mgmt": "A",
+  "value": "D"
+ },
+ "tagline": "Small-launch leader building a medium rocket, Neutron.",
+ "strengths": [
+  "Record backlog",
+  "About $1B of new launch contracts announced",
+  "Space systems revenue beyond launch"
+ ],
+ "weaknesses": [
+  "Not yet profitable",
+  "Neutron execution risk",
+  "Shares more than 50% below May peak but still pricey"
+ ],
+ "thesis": [
+  "Second-most proven US launch provider after SpaceX"
+ ],
+ "moat": "Moderate: flight heritage and vertical integration.",
+ "outlook": "Revenue and backlog keep rising while the shares fall. Neutron's first flights are the key catalyst.",
+ "news": "Signed roughly $1B in new launch contracts; record Q3.",
+ "risks": [
+  "Neutron delays",
+  "SpaceX pricing",
+  "Dilution"
+ ],
+ "changeMind": [
+  "A successful Neutron launch would move it toward Buy"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "Motley Fool: Rocket Lab's price keeps falling while revenue grows",
+   "url": "https://www.fool.com/investing/2026/11/17/rocket-labs-stock-price-keeps-falling-while-its-revenue-and-backlog-keep-growing-which-trend-should-investors-trust/"
+  },
+  {
+   "title": "Yahoo Finance RKLB history",
+   "url": "https://finance.yahoo.com/quote/RKLB/history/"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation.",
+ "buzz": "Heavily discussed and moving (Desperate Trader radar)."
+}

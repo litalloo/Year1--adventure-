@@ -1,0 +1,58 @@
+{
+ "ticker": "AMD",
+ "name": "Advanced Micro Devices",
+ "district": "tech",
+ "sectorLabel": "Technology",
+ "price": 503.41,
+ "changePct": -0.17,
+ "priceDate": "2026-11-17",
+ "verdict": "Watchlist",
+ "stats": {
+  "moat": "B",
+  "health": "A",
+  "growth": "A",
+  "profit": "B",
+  "mgmt": "A",
+  "value": "D"
+ },
+ "tagline": "Number two in AI chips, gaining while Nvidia is distracted.",
+ "strengths": [
+  "Competitive AI GPUs and strong CPUs",
+  "Clean balance sheet",
+  "Strong execution under Lisa Su"
+ ],
+ "weaknesses": [
+  "Still far behind on software ecosystem",
+  "Valuation already prices in big share gains",
+  "Cyclical PC and gaming exposure"
+ ],
+ "thesis": [
+  "Best-placed second source for AI accelerators",
+  "Data-center CPUs keep taking share from Intel"
+ ],
+ "moat": "Moderate: engineering scale and x86 position, but no lock-in comparable to CUDA.",
+ "outlook": "Momentum is real, but after a huge run the shares need flawless AI execution. A good company at a full price.",
+ "news": "Fell nearly 6% earlier this week, then roughly flat on Nov 17. Talked about heavily on X and Reddit.",
+ "risks": [
+  "AI GPU ramp slips",
+  "Nvidia regains footing",
+  "Multiple compresses"
+ ],
+ "changeMind": [
+  "Pullback toward a lower multiple with AI GPU revenue on track would make it a Buy"
+ ],
+ "entryNote": "",
+ "sources": [
+  {
+   "title": "Gotrade: AMD closes at $503.41 (Nov 17)",
+   "url": "https://www.heygotrade.com/en/news/amd-amd-stock-news-november-18-2026/"
+  },
+  {
+   "title": "Trefis: What is behind AMD's nearly 6% slide?",
+   "url": "https://www.trefis.com/stock/amd/articles/625816/why-did-amd-stock-fall-nearly-6/2026-11-17"
+  }
+ ],
+ "analyzedAt": "2026-11-18",
+ "method": "Quick screen, not a full analysis: moat, red flags, headline ratios and relative valuation.",
+ "buzz": "Top-5 most discussed on X and WSB for two straight weeks."
+}
